@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.TripScheduleMapper">
+
+	<resultMap type="com.example.demo.model.dto.TripScheduleDto" id="TripSchedule">
+		<result column="trip_id" property="tripId" />
+		<result column="location_id" property="locationId" />
+	</resultMap>
+
+	<insert id="registTripSchedule">
+		insert into trip_schedule(trip_id, day, `order`, location_id)
+		values(#{tripId}, #{day}, #{order}, #{locationId})
+	</insert>
+	
+	<select id="selectTripScheduleList" resultMap="TripSchedule">
+		select trip_id, day, `order`, location_id
+		from trip_schedule
+		where trip_id = #{tripId};
+	</select>
+
+</mapper>

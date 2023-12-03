@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.LocationMapper">
+
+	<resultMap type="com.example.demo.model.dto.LocationDto" id="Location">
+		<result column="location_id" property="locationId" />
+		<result column="place_url" property="placeUrl" />
+		<result column="place_name" property="placeName" />
+		<result column="address_name" property="addressName" />
+	</resultMap>
+
+	<select id="selectLocation" resultMap="Location">
+		select location_id, x, y, place_url, place_name, address_name
+		from location
+		where location_id = #{locationId}
+	</select>
+
+	<insert id="registLocation">
+		insert into location(location_id, x, y, place_url, place_name, address_name)
+		values(#{locationId}, #{x}, #{y}, #{placeUrl}, #{placeName}, #{addressName})
+	</insert>
+
+</mapper>

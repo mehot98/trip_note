@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.FollowMapper">
+
+	<resultMap type="FollowDto" id="follow">
+		<result column="user_id" property="userId" />
+		<result column="follower_id" property="followerId" />
+		<result column="trip_id" property="tripId" />
+		<result column="location_id" property="locationId" />
+	</resultMap>
+
+	<resultMap type="TripDto" id="tripDto">
+		<result column="trip_id" property="tripId" />
+		<result column="user_id" property="userId" />
+		<result column="trip_name" property="tripName" />
+		<result column="with" property="with" />
+		<result column="isPublic" property="isPublic" />
+	</resultMap>
+
+	<resultMap type="LocationDto" id="locationDto">
+		<result column="location_id" property="locationId" />
+		<result column="trip_id" property="tripId" />
+		<result column="place_url" property="placeUrl" />
+		<result column="place_name" property="placeName" />
+		<result column="address_name" property="addressName" />
+	</resultMap>
+
+	<resultMap type="UserDto" id="user">
+		<result column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="user_password" property="userPassword" />
+		<result column="email_id" property="emailId" />
+		<result column="email_domain" property="emailDomain" />
+		<result column="join_date" property="joinDate" />
+		<result column="follow_count" property="followCount" />
+		<result column="follower_count" property="followerCount" />
+	</resultMap>
+
+
+	<insert id="followUser" parameterType="FollowDto">
+		insert into follow
+		(user_id, follower_id)
+		values (#{userId}, #{followerId})
+	</insert>
+
+	<insert id="followTrip" parameterType="FollowDto">
+		insert into follow
+		(trip_id, user_id)
+		values (#{followerId}, #{userId})
+	</insert>
+
+	<insert id="followLocation" parameterType="FollowDto">
+		insert into follow
+		(user_id, location_id)
+		values (#{userId}, #{locationId})
+	</insert>
+
+	<select id="getFollowUser" parameterType="String"
+		resultMap="user">
+		select m.user_id, m.user_name
+		from follow f
+		join members m
+		on
+		f.follower_id = m.user_id
+		where f.user_id = #{userId}
+	</select>
+
+	<select id="getFollowTrip" parameterType="String"
+		resultMap="tripDto">
+		select t.trip_name, t.with
+		from follow f
+		join trip t
+		on
+		f.trip_id = t.trip_id
+		where f.user_id = #{userId}
+	</select>
+
+
+	<select id="getFollowLocation" parameterType="String"
+		resultMap="locationDto">
+		select l.place_name, l.place_url, l.address_name
+		from follow
+		f
+		join location l
+		on f.location_id = l.location_id
+		where f.user_id =
+		#{userId}
+	</select>
+
+	<delete id="deleteUser" parameterType="String">
+		delete from follow
+		where
+		user_id = #{userId}
+		and follower_id = #{followerId}
+	</delete>
+	<delete id="deleteTrip" parameterType="String">
+		delete from follow
+		where
+		user_id = #{userId}
+		and trip_id = #{tripId}
+	</delete>
+	<delete id="deleteLocation" parameterType="String">
+		delete from follow
+		where user_id = #{userId}
+		and location_id = #{locationId}
+	</delete>
+
+	<select id="countUser" parameterType="String">
+		SELECT COUNT(*) as count
+		FROM follow
+		WHERE user_id = #{userId}
+		AND follower_id IS NOT NULL
+		AND follower_id != '';
+	</select>
+</mapper>

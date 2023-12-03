@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.CommentMapper">
+
+	<resultMap type="CommentDto" id="comment">
+		<result column="comment_id" property="commentId" />
+		<result column="user_id" property="userId" />
+		<result column="comment" property="comment" />
+		<result column="regtime" property="regtime" />
+		<result column="board_trip" property="boardTrip" />
+		<result column="board_trip_id" property="boardTripId" />
+	</resultMap>
+
+	<!-- board -->
+	<insert id="writeBoardComment" parameterType="CommentDto">
+		insert into comment (comment_id, user_id, comment, regtime,
+		board_trip, board_trip_id)
+		values (#{commentId}, #{userId}, #{comment},
+		now(), "board", #{boardTripId})
+		<selectKey resultType="int" keyProperty="commentId"
+			order="AFTER">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<select id="listBoardComment" parameterType="int"
+		resultMap="comment">
+		select c.comment_id, c.user_id, c.comment, c.regtime, c.board_trip,
+		c.board_trip_id
+		FROM comment c
+		JOIN board b
+		ON c.board_trip_id = b.article_no
+		WHERE board_trip_id = #{boardTripId}
+	</select>
+
+	<delete id="deleteBoardComment" parameterType="int">
+		DELETE c
+		FROM comment c
+		JOIN board b ON c.board_trip_id = b.article_no
+		WHERE
+		c.board_trip_id = #{boardTripId} AND c.comment_id = #{commentId}
+	</delete>
+
+
+	<!-- trip -->
+	<insert id="writeTripComment" parameterType="CommentDto">
+		insert into comment (comment_id, user_id, comment, regtime,
+		board_trip, board_trip_id)
+		values (#{commentId}, #{userId}, #{comment},
+		now(), "trip", #{boardTripId})
+		<selectKey resultType="int" keyProperty="commentId"
+			order="AFTER">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<select id="listTripComment" parameterType="int"
+		resultMap="comment">
+		select c.comment_id, c.user_id, c.comment, c.regtime, c.board_trip,
+		c.board_trip_id
+		FROM comment c
+		JOIN trip t
+		ON c.board_trip_id = t.trip_id
+		WHERE board_trip_id = #{boardTripId}
+	</select>
+
+	<delete id="deleteTripComment" parameterType="int">
+		DELETE c
+		FROM comment c
+		JOIN trip t ON c.board_trip_id = t.trip_id
+		WHERE
+		c.board_trip_id = #{boardTripId} AND c.comment_id = #{commentId}
+	</delete>
+
+
+
+
+
+
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.TripMapper">
+
+<resultMap type="com.example.demo.model.dto.TripDto" id="Trip">
+	<result column="trip_id" property="tripId"/>
+	<result column="user_id" property="userId"/>
+	<result column="trip_name" property="tripName"/>
+	<result column="with" property="with"/>
+	<result column="is_public" property="isPublic"/>
+<!-- 	<result column="img" property="img" jdbcType="BLOB" javaType="_byte[]"/> -->
+<!-- <result property="IMG_THN" column="IMG_THN" jdbcType="BLOB" javaType="byte[]"/> -->
+	<result column="img_name" property="imgName"/>
+	<result column="img_size" property="imgSize" />
+</resultMap>
+
+<resultMap type="com.example.demo.model.dto.UserDto" id="User">
+	<result column="user_id" property="userId"/>
+	<result column="password" property="password"/>
+	<result column="user_name" property="userName"/>
+</resultMap>
+
+<select id="selectTripList" resultMap="Trip">
+	select trip_id, user_id, trip_name, `with`, is_public, img, img_name, img_size
+	from trip
+	<if test='userId != null'>
+	where user_id = #{userId}
+	</if>
+	limit #{startPage}, ${endPage}
+</select>
+
+<select id="selectTrip" resultMap="Trip">
+	select trip_id, user_id, trip_name, `with`, is_public, img, img_name, img_size
+	from trip
+	where trip_id = #{tripId}
+</select>
+
+<insert id="registTrip">
+	insert into trip(trip_id, user_id, trip_name, `with`, is_public, img, img_name, img_size)
+	values(#{tripId}, #{userId}, #{tripName}, #{with}, #{isPublic}, #{img}, #{imgName}, #{imgSize})
+</insert>
+
+<!-- <update id="updateTrip"> -->
+<!-- 	update trip -->
+<!-- 	set user_id = #{userId}, trip_name = #{tripName}, location_id = #{locationId} -->
+<!-- 	where trip_id = #{tripId}  -->
+<!-- </update> -->
+
+<!-- <delete id="deleteTrip"> -->
+<!-- 	delete from trip -->
+<!-- 	where trip_id = #{tripId} -->
+<!-- </delete> -->
+
+<!-- <select id="selectTripFollow"> -->
+<!-- 	select count(*) -->
+<!-- 	from follow_trip_list -->
+<!-- 	where user_id = #{userId} and trip_id = #{tripId} -->
+<!-- </select> -->
+
+<!-- <insert id="registTripFollow"> -->
+<!-- 	insert into follow_trip_list(user_id, trip_id) -->
+<!-- 	values(#{userId}, #{tripId}) -->
+<!-- </insert> -->
+
+<!-- <delete id="deleteTripFollow"> -->
+<!-- 	delete from follow_trip_list -->
+<!-- 	where user_id = #{userId} and trip_id = #{tripId} -->
+<!-- </delete> -->
+
+<!-- <select id="selectUserFollowTripList" resultMap="Trip"> -->
+<!-- 	select * -->
+<!-- 	from trip -->
+<!-- 	where trip_id in (select trip_id -->
+<!-- 	from follow_trip_list -->
+<!-- 	where user_id = #{userId}); -->
+<!-- </select> -->
+
+<!-- <select id="selectTripFollowUserList" resultMap="User"> -->
+<!-- 	select * -->
+<!-- 	from user -->
+<!-- 	where user_id in (select user_id -->
+<!-- 	from follow_trip_list -->
+<!-- 	where trip_id = #{tripId}); -->
+<!-- </select> -->
+
+<!-- <select id="selectTripFollowUserCount"> -->
+<!-- 	select count(*) -->
+<!-- 	from follow_trip_list -->
+<!-- 	where trip_id = #{tripId} -->
+<!-- </select> -->
+
+<!-- <select id="selectUserFollowTripCount"> -->
+<!-- 	select count(*) -->
+<!-- 	from follow_trip_list -->
+<!-- 	where user_id = #{userId} -->
+<!-- </select> -->
+
+<select id="getLastId">
+	select max(trip_id)
+	from trip
+</select>
+
+</mapper>
